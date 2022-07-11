@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Modal, View, Button, Text, StyleSheet } from "react-native";
-import { parkingLotDetailsType } from "../screens/ParkingSpace";
+import { parkingLotDetailsType } from "../screens/SearchResult";
 
 export type RemoveVehicleProps = {
   isVisible: boolean;

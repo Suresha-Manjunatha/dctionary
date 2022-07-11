@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react-native";
-import Lots from "../src/screens/ParkingSpace";
+import Lots from "../src/screens/SearchResult";
 
 jest.mock("@react-navigation/native", () => {
   return {

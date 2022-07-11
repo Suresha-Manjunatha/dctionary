@@ -1,39 +1,29 @@
 import React, { FC } from "react";
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, Text, Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
-import { parkingLotDetailsType } from "../screens/ParkingSpace";
+import { Card } from "react-native-paper";
+
+const { width } = Dimensions.get("window");
 
 export type FlatListRenderProps = {
-  item: parkingLotDetailsType;
-  handleAdd: (free: boolean) => void;
-  setCurrentLot: (id: number) => void;
-  handleRemove: () => void;
+  item: any;
+  onClick: (free: boolean) => void;
 };
 
-const FlatListRender: FC<FlatListRenderProps> = ({
-  item,
-  handleAdd,
-  setCurrentLot,
-  handleRemove,
-}) => {
+const FlatListRender: FC<FlatListRenderProps> = ({ item, onClick }) => {
   return (
     <TouchableOpacity
+      style={styles.container}
       onPress={() => {
-        setCurrentLot(item.id);
-        item.free ? handleAdd(false) : handleRemove();
+        onClick(item?.free);
       }}
     >
-      <View
-        style={{
-          ...styles.item,
-          backgroundColor: item.free ? "green" : "red",
-        }}
-      >
-        <Text style={styles.itemText}>P{item.id}</Text>
-        <Text style={styles.itemText}>
-          {item.free ? "Free" : `Occupied by ${item.reg}`}
+      <Card style={styles.card}>
+        <Text style={styles.textHeader}>{item?.word}</Text>
+        <Text style={styles.paragraph}>
+          {item?.meanings[0]?.definitions[0]?.definition}{" "}
         </Text>
-      </View>
+      </Card>
     </TouchableOpacity>
   );
 };
@@ -41,16 +31,25 @@ const FlatListRender: FC<FlatListRenderProps> = ({
 export default FlatListRender;
 
 export const styles = StyleSheet.create({
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    borderRadius: 10,
-    marginHorizontal: 10,
-    marginVertical: 15,
-    padding: 20,
+  card: {
+    borderColor: "#000",
+    borderWidth: 0.5,
+    width: width - 35,
   },
-  itemText: {
-    color: "white",
+  textHeader: {
+    fontSize: 25,
+    fontWeight: "bold",
+    padding: 5,
+    marginLeft: 5,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    margin: 10,
+  },
+  paragraph: {
+    fontSize: 18,
+    fontWeight: "bold",
+    padding: 5,
   },
 });
