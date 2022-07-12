@@ -77,6 +77,7 @@ const Home: FC = () => {
   };
 
   const handleSnackbarDismiss = () => {
+    console.log("Dissmissed");
     setSnackbarData({ isOpen: false, message: "" });
   };
 
@@ -99,9 +100,13 @@ const Home: FC = () => {
         key={`snackbar-${snackbarData.isOpen}`}
         visible={snackbarData.isOpen}
         onDismiss={handleSnackbarDismiss}
+        duration={2000}
         action={{
           label: "Close",
-          onPress: handleSnackbarDismiss,
+          color: "red",
+          onPress() {
+            handleSnackbarDismiss();
+          },
         }}
       >
         {snackbarData.message}
