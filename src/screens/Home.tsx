@@ -51,32 +51,23 @@ const Home: FC = () => {
   }, []);
 
   const handleSearch = (searchWord?: string) => {
-    console.log(searchWord ?? word);
     setLoading(true);
     fetch(`${DictionayAPI}${searchWord ?? word}`)
       .then((data) => data.json())
       .then((jsonData) => {
-        console.log("inside Then");
         if (jsonData?.message) {
           setSnackbarData({
             isOpen: true,
             message: `Unable to fetch Info about ${searchWord ?? word} `,
           });
+        } else {
+          setWordInfo(jsonData);
+          setFirstTime(false);
         }
-        console.log(
-          "-----------------------------------------------------------------------------------------------------------"
-        );
-        console.log(jsonData);
-        console.log(
-          "-----------------------------------------------------------------------------------------------------------"
-        );
-        setWordInfo(jsonData);
-        setFirstTime(false);
         setLoading(false);
       })
       .catch((error) => {
         setWordInfo([]);
-        console.log(error);
         setSnackbarData({
           isOpen: true,
           message: `Unable to fetch Info about ${word} `,
@@ -95,6 +86,7 @@ const Home: FC = () => {
       isOpen: false,
       item: {
         meanings: {
+          //@ts-ignore
           definitions: [""],
         },
       },

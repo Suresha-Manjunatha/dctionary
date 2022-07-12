@@ -3,8 +3,7 @@ import { Modal, Text, Dimensions, View, ScrollView } from "react-native";
 import { Snackbar } from "react-native-paper";
 import { Card } from "react-native-paper";
 import { StyleSheet } from "react-native";
-// import SoundPlayer from "react-native-sound-player";
-// import Sound from "react-native-sound";
+import { Audio } from "expo-av";
 
 import Button from "../components/Button";
 
@@ -16,18 +15,26 @@ type Props = {
   onCancel: () => void;
 };
 
+const SoundPlayer = new Audio.Sound();
+
 const SearchResult: FC<Props> = ({ item, isOpen, onCancel }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlayedOnce, setIsPlayedOnce] = useState(false);
   const [audioFile, setAdudioFile] = useState({
     isAudioPresent: false,
     audioUrl: "",
+  });
+  //listens to the sound player and sets isPlaying state when the sound is done playing
+  SoundPlayer.setOnPlaybackStatusUpdate((status) => {
+    //@ts-ignore
+    setIsPlaying(status.isPlaying);
   });
   const [snackbarData, setSnackbarData] = useState({
     isOpen: false,
     message: "",
   });
 
-  const findAudioFile = () => {
+  const findAudioFile = async () => {
     //finding audio file
     const audioFile = item?.phonetics?.find((a: { audio: any }) => a?.audio);
 
@@ -36,10 +43,37 @@ const SearchResult: FC<Props> = ({ item, isOpen, onCancel }) => {
         isAudioPresent: true,
         audioUrl: audioFile?.audio,
       });
+      SoundPlayer.loadAsync({ uri: audioFile.audio }).catch((error) =>
+        setSnackbarData({
+          isOpen: true,
+          message: "Unable to Load Sound !!",
+        })
+      );
     }
   };
 
-  const playPause = () => {};
+  const playPause = async () => {
+    if (audioFile.isAudioPresent) {
+      if (isPlaying) {
+        SoundPlayer.pauseAsync();
+        setIsPlaying(false);
+      } else {
+        if (SoundPlayer._loaded) {
+          isPlayedOnce && SoundPlayer.replayAsync();
+          SoundPlayer.playAsync()
+            .then(() => {
+              setIsPlayedOnce(true);
+            })
+            .catch((er) => {
+              setSnackbarData({
+                isOpen: true,
+                message: "Unable to Play Sound !!",
+              });
+            });
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     findAudioFile();
@@ -69,6 +103,7 @@ const SearchResult: FC<Props> = ({ item, isOpen, onCancel }) => {
         </Text>
       </Card>
       <ScrollView style={styles.scroll}>
+        {/* @ts-ignore  */}
         {item?.meanings?.map((list) => {
           return (
             <Card style={styles.itemCard} key={`${list?.partOfSpeech}`}>
