@@ -11,6 +11,9 @@ export type FlatListRenderProps = {
 };
 
 const FlatListRender: FC<FlatListRenderProps> = ({ item, onClick }) => {
+  React.useEffect(() => {
+    console.log(item);
+  }, []);
   return (
     <TouchableOpacity
       style={styles.container}

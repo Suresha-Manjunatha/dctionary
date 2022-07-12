@@ -1,6 +1,12 @@
 import React, { FC } from "react";
-import { View, Text, StyleSheet, Dimensions, SafeAreaView } from "react-native";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import {
+  Text,
+  StyleSheet,
+  Dimensions,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
+import { Card } from "react-native-paper";
 
 const { width } = Dimensions.get("window");
 
@@ -10,9 +16,14 @@ const RandomWordShowcase: FC<RandomWordType> = ({
   word,
   definition,
   pronunciation,
+  onPress,
 }) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={styles.container}
+      onPress={onPress}
+    >
       <Card style={styles.card}>
         <Text style={styles.text}>{`Word of the day`}</Text>
         <Text style={styles.textHeader}>{`Word:    ${word}`}</Text>
@@ -21,7 +32,7 @@ const RandomWordShowcase: FC<RandomWordType> = ({
           style={styles.paragraph}
         >{`Peonunciation: ${pronunciation} `}</Text>
       </Card>
-    </SafeAreaView>
+    </TouchableOpacity>
   );
 };
 

@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Pressable,
 } from "react-native";
 import { ActivityIndicator, Snackbar } from "react-native-paper";
 
@@ -49,11 +50,26 @@ const Home: FC = () => {
     }
   }, []);
 
-  const handleSearch = () => {
+  const handleSearch = (searchWord?: string) => {
+    console.log(searchWord ?? word);
     setLoading(true);
-    fetch(`${DictionayAPI}${word}`)
+    fetch(`${DictionayAPI}${searchWord ?? word}`)
       .then((data) => data.json())
       .then((jsonData) => {
+        console.log("inside Then");
+        if (jsonData?.message) {
+          setSnackbarData({
+            isOpen: true,
+            message: `Unable to fetch Info about ${searchWord ?? word} `,
+          });
+        }
+        console.log(
+          "-----------------------------------------------------------------------------------------------------------"
+        );
+        console.log(jsonData);
+        console.log(
+          "-----------------------------------------------------------------------------------------------------------"
+        );
         setWordInfo(jsonData);
         setFirstTime(false);
         setLoading(false);
@@ -73,6 +89,18 @@ const Home: FC = () => {
     setSnackbarData({ isOpen: false, message: "" });
   };
 
+  const handleModelClose = () => {
+    setWord("");
+    setModalData({
+      isOpen: false,
+      item: {
+        meanings: {
+          definitions: [""],
+        },
+      },
+    });
+  };
+
   return (
     <SafeAreaView testID="home" style={styles.root}>
       <Snackbar
@@ -90,16 +118,7 @@ const Home: FC = () => {
         <SearchResult
           item={modelData.item}
           isOpen={modelData.isOpen}
-          onCancel={() => {
-            setModalData({
-              isOpen: false,
-              item: {
-                meanings: {
-                  definitions: [""],
-                },
-              },
-            });
-          }}
+          onCancel={handleModelClose}
         />
       ) : (
         <View style={{ flex: 1 }}>
@@ -113,7 +132,7 @@ const Home: FC = () => {
             <Button
               title="Search"
               disabled={word.length === 0}
-              onPress={handleSearch}
+              onPress={() => handleSearch()}
               style={styles.searchButton}
               loading={loading}
             />
@@ -125,30 +144,26 @@ const Home: FC = () => {
               word={randomWord.word}
               definition={randomWord.definition}
               pronunciation={randomWord.pronunciation}
+              onPress={() => {
+                handleSearch(randomWord.word);
+              }}
             />
           ) : (
-            <TouchableOpacity
-              onPress={() => {
-                console.log("Touched");
-              }}
-              activeOpacity={1}
-            >
-              <FlatList
-                data={wordInfo}
-                keyExtractor={(item) => `${Math.random() * 1985}Id}`}
-                renderItem={({ item }) => (
-                  <FlatListRender
-                    item={item}
-                    onClick={() => {
-                      setModalData({
-                        isOpen: true,
-                        item,
-                      });
-                    }}
-                  />
-                )}
-              />
-            </TouchableOpacity>
+            <FlatList
+              data={wordInfo}
+              keyExtractor={(item) => `${Math.random() * 1985}Id}`}
+              renderItem={({ item }) => (
+                <FlatListRender
+                  item={item}
+                  onClick={() => {
+                    setModalData({
+                      isOpen: true,
+                      item,
+                    });
+                  }}
+                />
+              )}
+            />
           )}
         </View>
       )}

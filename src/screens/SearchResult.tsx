@@ -3,8 +3,8 @@ import { Modal, Text, Dimensions, View, ScrollView } from "react-native";
 import { Snackbar } from "react-native-paper";
 import { Card } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import SoundPlayer from "react-native-sound-player";
-import Sound from "react-native-sound";
+// import SoundPlayer from "react-native-sound-player";
+// import Sound from "react-native-sound";
 
 import Button from "../components/Button";
 
@@ -23,71 +23,23 @@ const SearchResult: FC<Props> = ({ item, isOpen, onCancel }) => {
     audioUrl: "",
   });
   const [snackbarData, setSnackbarData] = useState({
-    isOpen: true,
+    isOpen: false,
     message: "",
-  });
-  var audio = new Sound(audioFile.audioUrl, undefined, (error) => {
-    if (error) {
-      console.log("failed to load the sound", error);
-      return;
-    }
-    // if loaded successfully
-    console.log(
-      "duration in seconds: " +
-        audio.getDuration() +
-        "number of channels: " +
-        audio.getNumberOfChannels()
-    );
   });
 
   const findAudioFile = () => {
     //finding audio file
-    const audioFile = item?.phonetics?.find((a) => a?.audio);
+    const audioFile = item?.phonetics?.find((a: { audio: any }) => a?.audio);
 
     if (audioFile) {
       setAdudioFile({
         isAudioPresent: true,
         audioUrl: audioFile?.audio,
       });
-      //loading audio for playing
-      audio = new Sound(audioFile?.audio, undefined, (error) => {
-        if (error) {
-          console.log("failed to load the sound", error);
-          return;
-        }
-        // if loaded successfully
-        console.log(
-          "duration in seconds: " +
-            audio.getDuration() +
-            "number of channels: " +
-            audio.getNumberOfChannels()
-        );
-      });
-    } else {
-      setSnackbarData({
-        isOpen: true,
-        message: "Unable to play audeo!!",
-      });
     }
   };
 
-  const playPause = () => {
-    if (audio.isPlaying()) {
-      audio.pause();
-      setIsPlaying(false);
-    } else {
-      setIsPlaying(true);
-      audio.play((success) => {
-        if (success) {
-          setIsPlaying(false);
-          console.log("successfully finished playing");
-        } else {
-          setIsPlaying(false);
-          console.log("playback failed due to audio decoding errors");
-        }
-      });
-    }
-  };
+  const playPause = () => {};
 
   useEffect(() => {
     findAudioFile();
@@ -117,9 +69,9 @@ const SearchResult: FC<Props> = ({ item, isOpen, onCancel }) => {
         </Text>
       </Card>
       <ScrollView style={styles.scroll}>
-        {item?.meanings?.map((list, index) => {
+        {item?.meanings?.map((list) => {
           return (
-            <Card style={styles.itemCard}>
+            <Card style={styles.itemCard} key={`${list?.partOfSpeech}`}>
               <Text style={styles.partOfSpeech}>{list?.partOfSpeech}</Text>
               <Text style={styles.paragraph}>
                 {list?.definitions?.[0].definition}{" "}
