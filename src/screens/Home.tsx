@@ -12,7 +12,7 @@ import {
 import { ActivityIndicator, Snackbar } from "react-native-paper";
 
 import Button from "../components/Button";
-import { RandomWordType, DictionayAPI, RandomWordAPI } from "../types/home";
+import { RandomWordType } from "../types/home";
 import RandomWordShowcase from "../components/RandomWordShowcase";
 import FlatListRender from "../components/FlatListRender";
 import SearchResult from "./SearchResult";
@@ -21,7 +21,7 @@ const { width } = Dimensions.get("window");
 
 const Home: FC = () => {
   const [word, setWord] = useState<string>("");
-  const [firstTime, setFirstTime] = useState<boolean>(true);
+  const [start, setStart] = useState<boolean>(true);
   const [randomWord, setRandomWord] = useState({} as RandomWordType);
   const [wordInfo, setWordInfo] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,8 +35,8 @@ const Home: FC = () => {
   });
 
   useEffect(() => {
-    if (firstTime) {
-      fetch(RandomWordAPI)
+    if (start) {
+      fetch("https://random-words-api.vercel.app/word")
         .then((data) => data.json())
         .then((data) => {
           setRandomWord(data[0]);
@@ -52,7 +52,9 @@ const Home: FC = () => {
 
   const handleSearch = (searchWord?: string) => {
     setLoading(true);
-    fetch(`${DictionayAPI}${searchWord ?? word}`)
+    fetch(
+      `https://api.dictionaryapi.dev/api/v2/entries/en/${searchWord ?? word}`
+    )
       .then((data) => data.json())
       .then((jsonData) => {
         if (jsonData?.message) {
@@ -62,7 +64,7 @@ const Home: FC = () => {
           });
         } else {
           setWordInfo(jsonData);
-          setFirstTime(false);
+          setStart(false);
         }
         setLoading(false);
       })
@@ -136,7 +138,7 @@ const Home: FC = () => {
           </View>
           {loading ? (
             <ActivityIndicator size={40} style={styles.indicatorStyle} />
-          ) : firstTime ? (
+          ) : start ? (
             <RandomWordShowcase
               word={randomWord.word}
               definition={randomWord.definition}
@@ -172,28 +174,34 @@ export default Home;
 
 export const styles = StyleSheet.create({
   root: {
+    width: width,
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f6f1eb",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
   },
   container: {
+    height: "20%",
     flexDirection: "row",
-    backgroundColor: "white",
-    padding: 5,
+    // paddingLeft: 5,
     justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   input: {
     padding: 5,
-    borderColor: "grey",
+    borderColor: "blue",
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 20,
     marginBottom: 10,
     marginRight: 2,
-    width: width / 1.5,
+    width: "80%",
     height: 40,
   },
   searchButton: {
-    marginTop: 20,
+    marginTop: 15,
     height: 40,
     width: 100,
   },

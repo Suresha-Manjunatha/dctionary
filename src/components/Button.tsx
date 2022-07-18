@@ -41,7 +41,7 @@ const Button: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#16a085",
+    backgroundColor: "orange",
     borderRadius: 5,
     justifyContent: "center",
   },

@@ -5,6 +5,7 @@ import {
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { Card } from "react-native-paper";
 
@@ -25,12 +26,14 @@ const RandomWordShowcase: FC<RandomWordType> = ({
       onPress={onPress}
     >
       <Card style={styles.card}>
-        <Text style={styles.text}>{`Word of the day`}</Text>
-        <Text style={styles.textHeader}>{`Word:    ${word}`}</Text>
-        <Text style={styles.paragraph}>{`Defination: ${definition} `}</Text>
-        <Text
-          style={styles.paragraph}
-        >{`Peonunciation: ${pronunciation} `}</Text>
+        <Text style={styles.text}>Word of the day</Text>
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <Text style={{ fontSize: 22 }}>Word:</Text>
+          <Text style={styles.textHeader}> {word}</Text>
+        </View>
+
+        <Text style={styles.paragraph}>Defination: {definition} </Text>
+        <Text style={styles.paragraph}>Peonunciation: {pronunciation} </Text>
       </Card>
     </TouchableOpacity>
   );
@@ -46,24 +49,26 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     marginTop: 10,
     textDecorationLine: "underline",
+    color: "#3a6599",
   },
   card: {
     borderColor: "#000",
     borderWidth: 0.5,
+    padding: 10,
   },
   textHeader: {
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: "bold",
-    padding: 5,
+
+    fontStyle: "italic",
   },
   container: {
-    flex: 1,
+    display: "flex",
     justifyContent: "center",
     margin: 10,
+    alignItems: "center",
   },
   paragraph: {
     fontSize: 18,
-    fontWeight: "bold",
-    padding: 5,
   },
 });
