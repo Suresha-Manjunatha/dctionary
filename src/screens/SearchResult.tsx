@@ -25,8 +25,7 @@ const SearchResult: FC<Props> = ({ item, isOpen, onCancel }) => {
     audioUrl: "",
   });
   //listens to the sound player and sets isPlaying state when the sound is done playing
-  SoundPlayer.setOnPlaybackStatusUpdate((status) => {
-    //@ts-ignore
+  SoundPlayer.setOnPlaybackStatusUpdate((status: any) => {
     setIsPlaying(status.isPlaying);
   });
   const [snackbarData, setSnackbarData] = useState({
@@ -103,8 +102,7 @@ const SearchResult: FC<Props> = ({ item, isOpen, onCancel }) => {
         </Text>
       </Card>
       <ScrollView style={styles.scroll}>
-        {/* @ts-ignore  */}
-        {item?.meanings?.map((list) => {
+        {item?.meanings?.map((list: any) => {
           return (
             <Card style={styles.itemCard} key={`${list?.partOfSpeech}`}>
               <Text style={styles.partOfSpeech}>{list?.partOfSpeech}</Text>
@@ -142,11 +140,14 @@ export const styles = StyleSheet.create({
     borderColor: "#000",
     borderWidth: 0.5,
     width: width - 35,
+    backgroundColor: "lightgray",
   },
   itemCard: {
     borderBottomColor: "#000",
     borderBottomWidth: 0.5,
     width: width - 35,
+    marginBottom: 15,
+    backgroundColor: "lightyellow",
   },
   textHeader: {
     fontSize: 25,

@@ -8,13 +8,17 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --coverage"
+    "test": "jest --verbose --coverage",
+    "test:update": "jest --verbose --coverage --updateSnapshot",
+    "test:watch": "jest --verbose --watch",
+    "coverage": "jest --verbose --coverage && open ./coverage/lcov-report/index.html"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.9.0",
+    "@mui/material": "^5.9.1",
+    "@mui/styled-engine-sc": "^5.8.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.2",
     "@types/jest": "^27.4.1",
@@ -22,6 +26,7 @@
     "expo": "~44.0.0",
     "expo-av": "^11.2.3",
     "expo-status-bar": "~1.2.0",
+    "expo-updates": "~0.11.7",
     "jest": "^26.6.3",
     "jest-expo": "^44.0.1",
     "react": "17.0.1",
@@ -31,7 +36,8 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-snackbar": "^2.4.0",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -43,6 +49,10 @@
   },
   "private": true,
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+     
+    ]
   }
 }

@@ -8,13 +8,11 @@ import {
   TouchableOpacity,
   FlatList,
   Pressable,
+  Text,
 } from "react-native";
-import { ActivityIndicator, Snackbar } from "react-native-paper";
+import { ActivityIndicator, Card, Snackbar } from "react-native-paper";
 
 import Button from "../components/Button";
-import { RandomWordType } from "../types/home";
-import RandomWordShowcase from "../components/RandomWordShowcase";
-import FlatListRender from "../components/FlatListRender";
 import SearchResult from "./SearchResult";
 
 const { width } = Dimensions.get("window");
@@ -22,7 +20,7 @@ const { width } = Dimensions.get("window");
 const Home: FC = () => {
   const [word, setWord] = useState<string>("");
   const [start, setStart] = useState<boolean>(true);
-  const [randomWord, setRandomWord] = useState({} as RandomWordType);
+  const [randomWord, setRandomWord] = useState({} as any);
   const [wordInfo, setWordInfo] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [modelData, setModalData] = useState({
@@ -139,30 +137,53 @@ const Home: FC = () => {
           {loading ? (
             <ActivityIndicator size={40} style={styles.indicatorStyle} />
           ) : start ? (
-            <RandomWordShowcase
-              word={randomWord.word}
-              definition={randomWord.definition}
-              pronunciation={randomWord.pronunciation}
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.container1}
               onPress={() => {
                 handleSearch(randomWord.word);
               }}
-            />
+            >
+              <Card style={styles.card}>
+                <Text style={styles.text}>Word of the day</Text>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <Text style={{ fontSize: 22 }}>Word:</Text>
+                  <Text style={styles.textHeader}> {randomWord.word}</Text>
+                </View>
+
+                <Text style={styles.paragraph}>
+                  Defination: {randomWord.definition}{" "}
+                </Text>
+                <Text style={styles.paragraph}>
+                  Peonunciation: {randomWord.pronunciation}{" "}
+                </Text>
+              </Card>
+            </TouchableOpacity>
           ) : (
-            <FlatList
-              data={wordInfo}
-              keyExtractor={(item) => `${Math.random() * 1985}Id}`}
-              renderItem={({ item }) => (
-                <FlatListRender
-                  item={item}
-                  onClick={() => {
-                    setModalData({
-                      isOpen: true,
-                      item,
-                    });
-                  }}
-                />
-              )}
-            />
+            <TouchableOpacity activeOpacity={0.7} style={styles.container1}>
+              <FlatList
+                data={wordInfo}
+                keyExtractor={(item) => `${Math.random() * 1985}Id}`}
+                renderItem={({ item }: any) => (
+                  <TouchableOpacity
+                    style={styles.container2}
+                    onPress={() => {
+                      setModalData({
+                        isOpen: true,
+                        item,
+                      });
+                    }}
+                  >
+                    <Card style={styles.card1}>
+                      <Text style={styles.textHeader1}>{item?.word}</Text>
+                      <Text style={styles.paragraph1}>
+                        {item?.meanings[0]?.definitions[0]?.definition}{" "}
+                      </Text>
+                    </Card>
+                  </TouchableOpacity>
+                )}
+              />
+            </TouchableOpacity>
           )}
         </View>
       )}
@@ -174,7 +195,7 @@ export default Home;
 
 export const styles = StyleSheet.create({
   root: {
-    width: width,
+    width: "100%",
     flex: 1,
     backgroundColor: "#f6f1eb",
     alignItems: "center",
@@ -184,7 +205,7 @@ export const styles = StyleSheet.create({
   container: {
     height: "20%",
     flexDirection: "row",
-    // paddingLeft: 5,
+    paddingHorizontal: 15,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -201,7 +222,7 @@ export const styles = StyleSheet.create({
     height: 40,
   },
   searchButton: {
-    marginTop: 15,
+    marginTop: 10,
     height: 40,
     width: 100,
   },
@@ -209,5 +230,56 @@ export const styles = StyleSheet.create({
     flex: 0.8,
     justifyContent: "center",
     alignItems: "center",
+  },
+  text: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 30,
+    paddingBottom: 20,
+    marginTop: 10,
+    textDecorationLine: "underline",
+    color: "#3a6599",
+  },
+  card: {
+    borderColor: "#000",
+    borderWidth: 0.5,
+    padding: 10,
+  },
+  textHeader: {
+    fontSize: 22,
+    fontWeight: "bold",
+
+    fontStyle: "italic",
+  },
+  container1: {
+    display: "flex",
+    justifyContent: "center",
+    margin: 10,
+    alignItems: "center",
+  },
+  paragraph: {
+    fontSize: 18,
+  },
+
+  card1: {
+    borderColor: "#000",
+    borderWidth: 0.5,
+    width: width - 35,
+  },
+  textHeader1: {
+    fontSize: 25,
+    fontWeight: "bold",
+    padding: 5,
+    marginLeft: 5,
+  },
+  container2: {
+    flex: 1,
+    justifyContent: "center",
+    margin: 10,
+  },
+  paragraph1: {
+    fontSize: 18,
+    fontWeight: "bold",
+    padding: 5,
   },
 });
